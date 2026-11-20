@@ -1,0 +1,175 @@
+{
+  "operator": "Kopano Mobile (fictional)",
+  "seed": 20261125,
+  "opening_sims": 35000,
+  "first_month": "2024-11-01",
+  "last_month": "2026-10-01",
+  "behaviour": {
+    "prepaid_leave": 0.024,
+    "contract_cancel": 0.009,
+    "prepaid_add_rate": 0.052,
+    "contract_add_rate": 0.009,
+    "normal_swap_share": 0.03,
+    "recharge_freq": 3.1,
+    "recharge_value": 20.5,
+    "prepaid_rev_drift": -0.015,
+    "data_usage_growth": 0.25,
+    "migrate_to_contract": 0.004
+  },
+  "events": {
+    "contract_price_increase": {
+      "month": "2026-02-01",
+      "uplift": 0.06
+    },
+    "competitor_voice_bundle": {
+      "start_month": "2026-03-01",
+      "region": "Gauteng",
+      "leave_multiplier_voice_heavy": {
+        "2026-03-01": 1.4,
+        "2026-04-01": 2.6,
+        "2026-05-01": 2.6,
+        "2026-06-01": 1.9,
+        "2026-07-01": 1.25,
+        "2026-08-01": 1.25,
+        "2026-09-01": 1.15,
+        "2026-10-01": 1.15
+      },
+      "balanced_share_of_effect": 0.4,
+      "voice_heavy_recharge_multiplier": 0.84
+    },
+    "network_damage": {
+      "district": "Ekurhuleni",
+      "availability_pct": {
+        "2026-03-01": 82.0,
+        "2026-04-01": 93.0
+      },
+      "recharge_multiplier": {
+        "2026-03-01": 0.62,
+        "2026-04-01": 0.85
+      },
+      "leave_multiplier": {
+        "2026-03-01": 1.8,
+        "2026-04-01": 1.3
+      },
+      "contract_revenue_multiplier": {
+        "2026-03-01": 0.85,
+        "2026-04-01": 0.95
+      },
+      "contract_cancel_multiplier": {
+        "2026-03-01": 1.6,
+        "2026-04-01": 1.6,
+        "2026-05-01": 1.6
+      },
+      "restored_month": "2026-05-01"
+    },
+    "informal_trade_push": {
+      "start_month": "2026-04-01",
+      "end_month": "2026-08-01",
+      "extra_adds_share": 0.4,
+      "region_split": {
+        "Gauteng": 0.7,
+        "KwaZulu-Natal": 0.3
+      },
+      "commission": 75.0,
+      "mix_genuine_casual_dud_swap": [
+        0.1,
+        0.08,
+        0.52,
+        0.3
+      ],
+      "informal_mix_during_push": [
+        0.42,
+        0.15,
+        0.43
+      ],
+      "sim_swaps_created": 1045
+    }
+  },
+  "initiative": {
+    "launch_month": "2026-06-01",
+    "end_month": "2026-08-01",
+    "id": "INIT001",
+    "name": "Prepaid Retention Bundle Offer",
+    "region": "Gauteng",
+    "excluded_district": "Ekurhuleni",
+    "min_tenure": 6,
+    "min_prior_recharges": 3,
+    "min_decline": 0.15,
+    "risk_bands": {
+      "High": 0.6,
+      "Medium": 0.35,
+      "Low": 0.15
+    },
+    "test_share": 0.5,
+    "take_up": {
+      "High": 0.55,
+      "Medium": 0.55,
+      "Low": 0.65
+    },
+    "price_mult": 0.75,
+    "leave_mult": {
+      "High": 0.5,
+      "Medium": 0.75,
+      "Low": 0.9
+    },
+    "reactivation": {
+      "High": 0.55
+    },
+    "freq_recovery": {
+      "High": 1.45,
+      "Medium": 1.05,
+      "Low": 1.0
+    }
+  },
+  "total_sim_swaps": 2137,
+  "data_quality_breaks": [
+    {
+      "id": "B1",
+      "type": "Active base on 30-day rule instead of 90-day",
+      "months": [
+        "2026-09-01",
+        "2026-10-01"
+      ],
+      "rows": 12431,
+      "net_revenue_impact": 0.0,
+      "detail": "is_active set to 0 for prepaid SIMs with no recharge this month"
+    },
+    {
+      "id": "B2",
+      "type": "Duplicate rows",
+      "months": [
+        "2026-06-01"
+      ],
+      "rows": 300,
+      "net_revenue_impact": 28557.46
+    },
+    {
+      "id": "B3",
+      "type": "Missing rows",
+      "months": [
+        "2025-09-01"
+      ],
+      "district": "Mangaung",
+      "rows": 32,
+      "net_revenue_impact": -3351.93
+    },
+    {
+      "id": "B4",
+      "type": "Negative revenue_data",
+      "months": [
+        "various"
+      ],
+      "rows": 40,
+      "net_revenue_impact": -8370.12
+    },
+    {
+      "id": "B5",
+      "type": "Outlier revenue_voice x100",
+      "months": [
+        "2025-12-01"
+      ],
+      "rows": 3,
+      "net_revenue_impact": 15036.12
+    }
+  ]
+}

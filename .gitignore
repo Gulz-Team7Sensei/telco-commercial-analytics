@@ -1,0 +1,24 @@
+# Data is regenerated from the seeded generator
+data/raw/
+data/clean/
+*.csv
+*.parquet
+
+# Private notes (role spec, personal material)
+docs/private/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Power BI local files
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+*.pbix
+
+# Editors and OS
+.vscode/
+.claude/settings.local.json
+Thumbs.db
+desktop.ini
