@@ -470,6 +470,15 @@ def generate(n_base: int, seed: int):
     dim_sub["activation_plan_id"] = dim_sub["subscriber_id"].map(first_plan)
     dim_plan = pd.DataFrame(PLANS, columns=["plan_id", "plan_name", "plan_type", "monthly_fee"])
     dim_plan["plan_sort"] = range(1, len(PLANS) + 1)
+    # published tariff history: the list fee for each contract plan and when it took effect
+    price_rows = []
+    for pid, _, ptype_, fee_ in PLANS:
+        if ptype_ != "Contract":
+            continue
+        price_rows.append(dict(plan_id=pid, effective_from=months[0], monthly_fee=fee_))
+        price_rows.append(dict(plan_id=pid, effective_from=months[EVT_PRICE["month_idx"]],
+                               monthly_fee=round(fee_ * (1 + EVT_PRICE["uplift"]), 2)))
+    plan_price = pd.DataFrame(price_rows)
     dim_region = pd.DataFrame({"region_id": range(1, len(REGIONS) + 1), "region": REGIONS})
     dim_district = pd.DataFrame({"district_id": range(1, len(DISTRICTS) + 1),
                                  "district": [d[0] for d in DISTRICTS],
@@ -508,6 +517,7 @@ def generate(n_base: int, seed: int):
     fact_net = pd.concat(net_rows, ignore_index=True)
 
     tables = dict(fact_subscriber_month=fact, dim_subscriber=dim_sub, dim_plan=dim_plan,
+                  plan_price_history=plan_price,
                   dim_region=dim_region, dim_district=dim_district, dim_channel=dim_channel,
                   dim_segment=dim_segment, dim_date=dim_date, dim_initiative=dim_init,
                   fact_initiative_assignment=fact_init, fact_network_district_month=fact_net)

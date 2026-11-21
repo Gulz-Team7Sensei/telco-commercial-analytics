@@ -46,10 +46,11 @@ story, and how each number was verified.
 
 ```
 src/generate_data.py      seeded synthetic data generator
-src/validate.py           TODO: raw -> clean, writes the controls log for page 4
-src/reference_kpis.py     TODO: Python reference values each DAX measure must match
+src/validate.py           raw -> clean; writes controls_log.csv and recon_summary.csv
+src/reference_kpis.py     Python reference values each DAX measure must match
 data/raw/                 generator output, includes planted breaks (git-ignored)
 data/clean/               validated output the Power BI model loads (git-ignored)
+data/reference/           reference KPI tables from reference_kpis.py (git-ignored)
 data/ground_truth.json    planted events, offer parameters, break log
 powerbi/                  PBIP project (model as TMDL text, report as PBIR)
 docs/business_case.md     storyline, timeline, definitions, pages
@@ -65,6 +66,8 @@ python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
 python src/generate_data.py            # writes data/raw/*.csv and data/ground_truth.json
+python src/validate.py                 # writes data/clean/
+python src/reference_kpis.py           # writes data/reference/
 python src/generate_data.py --base 3000 --clean   # small run without planted breaks
 ```
 
@@ -76,6 +79,7 @@ A subscriber is a SIM. Tables written by the generator:
   row in the month it churns (`is_churn = 1`, `is_active = 0`). Prepaid rows carry
   `recharge_count` and `months_since_last_recharge`.
 - `dim_subscriber` (with `device_id`, `usage_profile`, `acquisition_cost`), `dim_plan`,
+  `plan_price_history` (contract list fees and their effective dates),
   `dim_district` (rolls up to `dim_region`), `dim_channel`, `dim_segment`, `dim_date`.
 - `fact_network_district_month`: network availability by district.
 - `dim_initiative`, `fact_initiative_assignment`: randomised test/control with a risk group.

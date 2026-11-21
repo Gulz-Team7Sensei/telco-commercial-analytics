@@ -19,6 +19,12 @@
 | 2026-11-20 | Churn window: three consecutive months with no recharge. Quality addition: recharged in at least two of the first three months | Common industry practice, stated as our assumption |
 | 2026-11-20 | Quality rate reported with and without SIM swaps | Swaps recharge, so they pass the quality test while adding no new customer |
 | 2026-11-20 | Offer discount set at 25%, with churn benefit concentrated in the high-risk group | Produces the approved ending: positive in high risk, slightly negative overall |
+| 2026-11-21 | Reconciliation tolerance: 0.1% of the billing figure or R500 for revenue, 0.1% or 2 for counts | Starting assumption; to be replaced by a stated materiality standard |
+| 2026-11-21 | Missing rows are escalated, never filled in | The mart cannot say which records are absent; only the source owner can resend |
+| 2026-11-21 | Bridge assigns each SIM to exactly one situation, so components sum exactly to the movement | No unexplained residual |
+| 2026-11-21 | Prepaid stayers split into lapsed, resumed, recharge frequency and recharge value | Under a 90-day churn rule the revenue loss appears as lapsing months before churn is reported |
+| 2026-11-21 | Offer margin measured as each SIM's change from its own baseline, test against control, with 95% intervals | Removes pre-existing differences between groups and shows the uncertainty |
+| 2026-11-21 | Added a contract tariff history table | The price component of the bridge needs published fees, not an inferred uplift |
 
 ## Open
 
