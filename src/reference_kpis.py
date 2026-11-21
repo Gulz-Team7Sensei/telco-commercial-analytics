@@ -90,7 +90,7 @@ def _fee_at(prices, month):
     return p.groupby("plan_id")["monthly_fee"].last()
 
 
-def bridge_pair(d, month_a, month_b):
+def bridge_pair(d, month_a, month_b, keys=("region_id",)):
     """Split the net revenue movement from month_a to month_b into components.
 
     Each SIM lands in exactly one situation, so the components sum exactly to the movement:
@@ -128,10 +128,10 @@ def bridge_pair(d, month_a, month_b):
 
     parts = []
 
-    def add(mask, component, amount, type_col, region_col):
+    def add(mask, component, amount, type_col, _unused=None):
         if mask.any():
-            parts.append(pd.DataFrame({"plan_type": m.loc[mask, type_col].to_numpy(),
-                                       "region_id": m.loc[mask, region_col].to_numpy(),
+            parts.append(pd.DataFrame({"subscriber_id": m.loc[mask, "subscriber_id"].to_numpy(),
+                                       "plan_type": m.loc[mask, type_col].to_numpy(),
                                        "component": component,
                                        "amount": np.asarray(amount)[mask.to_numpy()]}))
 
@@ -147,19 +147,20 @@ def bridge_pair(d, month_a, month_b):
     add(both, "Recharge frequency", (nb - na) * va, "plan_type_b", "region_id_b")
     add(both, "Recharge value", nb * (vb - va), "plan_type_b", "region_id_b")
     out = pd.concat(parts, ignore_index=True)
-    out["region_id"] = out["region_id"].astype(int)
-    out = out.groupby(["plan_type", "region_id", "component"], as_index=False)["amount"].sum()
+    keys = list(keys)
+    out = out.merge(d["sub"][["subscriber_id"] + keys], on="subscriber_id")
+    out = out.groupby(["plan_type"] + keys + ["component"], as_index=False)["amount"].sum()
     movement = rb.sum() - ra.sum()
     assert abs(out.amount.sum() - movement) < 0.01, "bridge does not sum to the movement"
     return out, ra.sum(), rb.sum()
 
 
-def bridge(d):
+def bridge(d, keys=("region_id",)):
     months = sorted(d["fact"].month_start.unique())
     rows, totals = [], []
     for basis, lag in (("MoM", 1), ("YoY", 12)):
         for i in range(lag, len(months)):
-            out, ta, tb = bridge_pair(d, months[i - lag], months[i])
+            out, ta, tb = bridge_pair(d, months[i - lag], months[i], keys)
             out.insert(0, "month_start", months[i])
             out.insert(0, "basis", basis)
             rows.append(out)

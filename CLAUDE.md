@@ -48,13 +48,16 @@ story, and how each number was verified.
 src/generate_data.py      seeded synthetic data generator
 src/validate.py           raw -> clean; writes controls_log.csv and recon_summary.csv
 src/reference_kpis.py     Python reference values each DAX measure must match
+src/build_model_tables.py clean -> model tables that Power BI loads (bridge, quality flags, offer outcomes)
 data/raw/                 generator output, includes planted breaks (git-ignored)
 data/clean/               validated output the Power BI model loads (git-ignored)
 data/reference/           reference KPI tables from reference_kpis.py (git-ignored)
+data/model/               the only folder the Power BI model loads from (git-ignored)
 data/ground_truth.json    planted events, offer parameters, break log
 powerbi/                  PBIP project (model as TMDL text, report as PBIR)
 docs/business_case.md     storyline, timeline, definitions, pages
 docs/metric_dictionary.md definitions, assumptions, verification status
+docs/model_spec.md        tables, relationships, every DAX measure, anchor values to verify against
 docs/decisions.md         dated decision log
 docs/private/             git-ignored working notes
 ```
@@ -68,6 +71,7 @@ pip install -r requirements.txt
 python src/generate_data.py            # writes data/raw/*.csv and data/ground_truth.json
 python src/validate.py                 # writes data/clean/
 python src/reference_kpis.py           # writes data/reference/
+python src/build_model_tables.py       # writes data/model/
 python src/generate_data.py --base 3000 --clean   # small run without planted breaks
 ```
 
@@ -107,8 +111,10 @@ A SIM swap is found by a `device_id` that appears on an earlier SIM.
 ## Power BI conventions
 
 - Save as PBIP so the model is text and diffs are reviewable.
-- Model changes go through the Power BI Modeling MCP; report pages are built by hand in
-  Power BI Desktop.
+- Model changes go through the Power BI Modeling MCP, following `docs/model_spec.md`; report
+  pages are built by hand in Power BI Desktop.
+- SIM-level derivations (bridge, quality flags, offer outcomes) are done in Python upstream;
+  DAX measures stay simple sums and ratios. Check measures prove the bridge agrees with the fact.
 - All measures live in a `_Measures` table, in display folders by page. Every measure has a
   description. No implicit measures.
 - One marked date table (`dim_date`), single-direction relationships.

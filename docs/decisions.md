@@ -25,6 +25,8 @@
 | 2026-11-21 | Prepaid stayers split into lapsed, resumed, recharge frequency and recharge value | Under a 90-day churn rule the revenue loss appears as lapsing months before churn is reported |
 | 2026-11-21 | Offer margin measured as each SIM's change from its own baseline, test against control, with 95% intervals | Removes pre-existing differences between groups and shows the uncertainty |
 | 2026-11-21 | Added a contract tariff history table | The price component of the bridge needs published fees, not an inferred uplift |
+| 2026-11-21 | SIM-level derivations (bridge, quality flags, offer outcomes) are computed in Python and loaded as tables; DAX only aggregates | Faster, simpler measures, one definition of each rule; DAX check measures tie the bridge back to the fact table |
+| 2026-11-21 | Materiality threshold for budget variances set at 2% of budget | Starting assumption |
 
 ## Open
 
