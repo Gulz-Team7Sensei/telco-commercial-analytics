@@ -1,0 +1,483 @@
+/// Home of every measure, in display folders by report page.
+table _Measures
+	lineageTag: 68b8955a-72de-418f-b4da-7984ab294359
+
+	/// Data + voice + other revenue. Prepaid revenue is recognised when the SIM recharges (assumption).
+	measure 'Net Revenue' = SUM ( fact_subscriber_month[net_revenue] )
+		formatString: #,##0
+		displayFolder: 1 Core
+		lineageTag: 63c0b8d7-12b0-49ee-85f9-9ee00f38546e
+
+	/// Net revenue minus direct cost.
+	measure 'Direct Margin' = SUM ( fact_subscriber_month[direct_margin] )
+		formatString: #,##0
+		displayFolder: 1 Core
+		lineageTag: 9d9fa753-dc72-40f2-abb5-e7213ec31d27
+
+	/// Direct margin as a share of net revenue.
+	measure 'Direct Margin %' = DIVIDE ( [Direct Margin], [Net Revenue] )
+		formatString: 0.0%
+		displayFolder: 1 Core
+		lineageTag: 9f605096-2755-4589-a004-6d0e0d28cabe
+
+	/// Active SIMs at the end of the latest month in context. Prepaid: recharged in the last 90 days. Contract: not cancelled.
+	measure 'Closing Base' =
+			VAR LastMonth = MAX ( dim_date[month_start] )
+			RETURN
+			    CALCULATE ( SUM ( fact_subscriber_month[is_active] ), dim_date[month_start] = LastMonth )
+		formatString: #,##0
+		displayFolder: 1 Core
+		lineageTag: 78a1d467-09e4-4738-8517-7859a1ecc84e
+
+	/// Closing base of the month before the latest month in context.
+	measure 'Opening Base' =
+			VAR PrevMonth = EDATE ( MAX ( dim_date[month_start] ), -1 )
+			RETURN
+			    CALCULATE (
+			        SUM ( fact_subscriber_month[is_active] ),
+			        ALL ( dim_date ),
+			        dim_date[month_start] = PrevMonth
+			    )
+		formatString: #,##0
+		displayFolder: 1 Core
+		lineageTag: e3ebb59c-d16a-41bc-be3f-25dfe9a144ac
+
+	/// (Opening base + closing base) / 2. Blank in the first month, which has no opening base.
+	measure 'Average Base' =
+			VAR o = [Opening Base]
+			VAR c = [Closing Base]
+			RETURN IF ( NOT ISBLANK ( o ), DIVIDE ( o + c, 2 ) )
+		formatString: #,##0
+		displayFolder: 1 Core
+		lineageTag: 1ad24cab-b671-42b1-96d4-28cb5d788b1b
+
+	/// SIMs activated in the period, including SIM swaps.
+	measure 'Gross Additions' = SUM ( fact_subscriber_month[is_gross_add] )
+		formatString: #,##0
+		displayFolder: 1 Core
+		lineageTag: 0638104a-bf25-49e9-92e6-71f80700c277
+
+	/// Prepaid: third consecutive month without a recharge. Contract: cancellation.
+	measure Churn = SUM ( fact_subscriber_month[is_churn] )
+		formatString: #,##0
+		displayFolder: 1 Core
+		lineageTag: b317c06c-b8fe-4c75-81e5-123b16c4ecee
+
+	/// Gross additions minus churn.
+	measure 'Net Additions' = [Gross Additions] - [Churn]
+		formatString: #,##0;-#,##0
+		displayFolder: 1 Core
+		lineageTag: db59bd1b-9f84-4fab-b367-39910a2f2bff
+
+	/// Churn divided by opening base. Single-month measure.
+	measure 'Churn Rate' = DIVIDE ( [Churn], [Opening Base] )
+		formatString: 0.00%
+		displayFolder: 1 Core
+		lineageTag: 0c6decdc-5b3f-40da-9a3f-466c5dce2fd0
+
+	/// Net revenue per average active SIM in the month (rand). Single-month measure.
+	measure ARPU = DIVIDE ( [Net Revenue], [Average Base] )
+		formatString: #,##0.00
+		displayFolder: 1 Core
+		lineageTag: c3350c17-52a7-45ba-ac29-02dce17dd9ca
+
+	/// Net revenue in the previous month.
+	measure 'Net Revenue PM' = CALCULATE ( [Net Revenue], DATEADD ( dim_date[date], -1, MONTH ) )
+		formatString: #,##0
+		displayFolder: 1 Core
+		lineageTag: 16f2961e-b380-4218-bec0-d0accab273f7
+
+	/// Net revenue in the same period last year.
+	measure 'Net Revenue PY' = CALCULATE ( [Net Revenue], DATEADD ( dim_date[date], -1, YEAR ) )
+		formatString: #,##0
+		displayFolder: 1 Core
+		lineageTag: 3bfd5901-498e-44d7-8368-cb2d75ebe318
+
+	/// Year-on-year change in net revenue.
+	measure 'Net Revenue YoY %' = DIVIDE ( [Net Revenue] - [Net Revenue PY], [Net Revenue PY] )
+		formatString: 0.0%
+		displayFolder: 1 Core
+		lineageTag: 9d170a27-11d8-4bf4-8d8f-dbc4ec7eff22
+
+	/// ARPU in the same month last year.
+	measure 'ARPU PY' = CALCULATE ( [ARPU], DATEADD ( dim_date[date], -1, YEAR ) )
+		formatString: #,##0.00
+		displayFolder: 1 Core
+		lineageTag: e40f349e-0fa7-41bb-ba0f-ba649383bf7c
+
+	/// SIMs whose plan changed this month, including prepaid to contract.
+	measure Migrations = SUM ( fact_subscriber_month[is_migration] )
+		formatString: #,##0
+		displayFolder: 1 Core
+		lineageTag: 3718f8a9-7a8e-4069-91ff-5e8451692a28
+
+	/// Number of prepaid recharges.
+	measure Recharges = SUM ( fact_subscriber_month[recharge_count] )
+		formatString: #,##0
+		displayFolder: 2 Prepaid behaviour
+		lineageTag: a8cbd904-b4e8-46fa-8e3b-8c46310fc167
+
+	/// Prepaid SIMs that recharged this month. A leading indicator, not the reported base.
+	measure '30-Day Active Base' =
+			CALCULATE (
+			    COUNTROWS ( fact_subscriber_month ),
+			    fact_subscriber_month[recharge_count] > 0,
+			    fact_subscriber_month[is_active] = 1
+			)
+		formatString: #,##0
+		displayFolder: 2 Prepaid behaviour
+		lineageTag: dbeeb9d0-ac79-4c30-a67e-4b2c3b373d79
+
+	/// 30-day active base as a share of the 90-day prepaid base.
+	measure 'Share Recharging' = DIVIDE ( [30-Day Active Base], CALCULATE ( [Closing Base], dim_plan_type[plan_type] = "Prepaid" ) )
+		formatString: 0.0%
+		displayFolder: 2 Prepaid behaviour
+		lineageTag: 9ea3dc5c-942d-462e-aba6-a42e02352ffe
+
+	/// Recharges per average prepaid SIM in the month.
+	measure 'Recharge Frequency' = DIVIDE ( [Recharges], CALCULATE ( [Average Base], dim_plan_type[plan_type] = "Prepaid" ) )
+		formatString: 0.00
+		displayFolder: 2 Prepaid behaviour
+		lineageTag: 08b29665-5578-48d6-b6e8-97653a58b7d5
+
+	/// Prepaid net revenue per recharge (rand).
+	measure 'Recharge Value' = DIVIDE ( CALCULATE ( [Net Revenue], dim_plan_type[plan_type] = "Prepaid" ), [Recharges] )
+		formatString: #,##0.00
+		displayFolder: 2 Prepaid behaviour
+		lineageTag: 12acd572-9ceb-43df-80fa-a8edc84840cd
+
+	/// Budgeted net revenue.
+	measure 'Budget Net Revenue' = SUM ( fact_budget[budget_net_revenue] )
+		formatString: #,##0
+		displayFolder: 3 Budget
+		lineageTag: 8b71ec7d-322e-4b1c-91d8-6ff83d578e53
+
+	/// Actual minus budgeted net revenue.
+	measure 'Revenue vs Budget' = [Net Revenue] - [Budget Net Revenue]
+		formatString: #,##0;-#,##0
+		displayFolder: 3 Budget
+		lineageTag: 69f60841-7039-4e07-a1df-b53c7532fd44
+
+	/// Revenue variance as a share of budget.
+	measure 'Revenue vs Budget %' = DIVIDE ( [Revenue vs Budget], [Budget Net Revenue] )
+		formatString: 0.0%
+		displayFolder: 3 Budget
+		lineageTag: 20c551bb-2efe-4e8f-aa1a-45bd2b6f5cdb
+
+	/// Budgeted gross additions.
+	measure 'Budget Gross Additions' = SUM ( fact_budget[budget_gross_adds] )
+		formatString: #,##0
+		displayFolder: 3 Budget
+		lineageTag: e081efbf-0c16-4301-a4ac-a497e81335de
+
+	/// Budgeted churn.
+	measure 'Budget Churn' = SUM ( fact_budget[budget_churn] )
+		formatString: #,##0
+		displayFolder: 3 Budget
+		lineageTag: 66f36e5e-7b50-4910-a6ed-0eca5b749c9e
+
+	/// Actual minus budgeted gross additions.
+	measure 'Gross Additions vs Budget' = [Gross Additions] - [Budget Gross Additions]
+		formatString: #,##0;-#,##0
+		displayFolder: 3 Budget
+		lineageTag: ca4b3eab-b219-4e54-9ee9-996aebc1b6cb
+
+	/// Actual minus budgeted churn.
+	measure 'Churn vs Budget' = [Churn] - [Budget Churn]
+		formatString: #,##0;-#,##0
+		displayFolder: 3 Budget
+		lineageTag: e6b6fe3e-febe-45fd-8161-6c1f06aceda6
+
+	/// Assumption: a revenue variance beyond 2% of budget is material.
+	measure 'Materiality Threshold' = 0.02
+		formatString: 0.0%
+		displayFolder: 3 Budget
+		lineageTag: da030e4e-fe8c-463d-b993-0fbe4671a86b
+
+	/// 1 when the revenue variance exceeds the materiality threshold.
+	measure 'Material Variance' = IF ( ABS ( [Revenue vs Budget %] ) > [Materiality Threshold], 1, 0 )
+		formatString: 0
+		displayFolder: 3 Budget
+		lineageTag: 1b223dc0-8a59-442a-a809-03e4e8125f10
+
+	/// Prepaid SIMs activated, including SIM swaps.
+	measure 'Prepaid Gross Additions' = CALCULATE ( [Gross Additions], dim_plan_type[plan_type] = "Prepaid" )
+		formatString: #,##0
+		displayFolder: 4 Acquisition quality
+		lineageTag: e9dda0ed-c1a7-472f-84c0-6e53108ff38c
+
+	/// Prepaid activations on a device already seen on an earlier SIM.
+	measure 'SIM Swaps' = CALCULATE ( [Prepaid Gross Additions], dim_subscriber[is_sim_swap] = 1 )
+		formatString: #,##0
+		displayFolder: 4 Acquisition quality
+		lineageTag: 92d738c3-5134-4f7c-98bd-0b62df9b237b
+
+	/// Prepaid gross additions excluding SIM swaps.
+	measure 'Net New Gross Additions' = [Prepaid Gross Additions] - [SIM Swaps]
+		formatString: #,##0
+		displayFolder: 4 Acquisition quality
+		lineageTag: 75ced4d1-e133-4c23-9b25-e4f59ed0eac3
+
+	/// Prepaid additions old enough to have a full three-month quality window.
+	measure 'Measurable Gross Additions' = CALCULATE ( [Prepaid Gross Additions], dim_subscriber[qga_measurable] = 1 )
+		formatString: #,##0
+		displayFolder: 4 Acquisition quality
+		lineageTag: 3fe65f19-6e9f-42b7-9bcc-18afe3b38bc6
+
+	/// Quality gross additions: recharged in at least two of the first three months, counting the activation month (assumption).
+	measure QGA = CALCULATE ( [Prepaid Gross Additions], dim_subscriber[is_qga] = 1, dim_subscriber[qga_measurable] = 1 )
+		formatString: #,##0
+		displayFolder: 4 Acquisition quality
+		lineageTag: 3385a3dc-ec96-4ba5-ab86-be34ea50be32
+
+	/// Quality gross additions that are not SIM swaps.
+	measure 'QGA ex Swaps' =
+			CALCULATE (
+			    [Prepaid Gross Additions],
+			    dim_subscriber[is_qga_ex_swaps] = 1,
+			    dim_subscriber[qga_measurable] = 1
+			)
+		formatString: #,##0
+		displayFolder: 4 Acquisition quality
+		lineageTag: 67627ea3-a8ca-408d-a7ef-3e61aaf6519d
+
+	/// QGA as a share of measurable prepaid gross additions.
+	measure 'QGA Rate' = DIVIDE ( [QGA], [Measurable Gross Additions] )
+		formatString: 0.0%
+		displayFolder: 4 Acquisition quality
+		lineageTag: 00637996-c71d-4578-923b-30f0203d326a
+
+	/// QGA excluding SIM swaps as a share of measurable prepaid gross additions.
+	measure 'QGA Rate ex Swaps' = DIVIDE ( [QGA ex Swaps], [Measurable Gross Additions] )
+		formatString: 0.0%
+		displayFolder: 4 Acquisition quality
+		lineageTag: 76893904-a05a-423f-855b-1de7a13c1292
+
+	/// Acquisition cost of SIMs activated in the period (rand).
+	measure 'Acquisition Cost' =
+			SUMX (
+			    FILTER ( fact_subscriber_month, fact_subscriber_month[is_gross_add] = 1 ),
+			    RELATED ( dim_subscriber[acquisition_cost] )
+			)
+		formatString: #,##0
+		displayFolder: 4 Acquisition quality
+		lineageTag: 76225af4-8a82-42b2-9aa7-046ea9250162
+
+	/// Acquisition cost of all measurable prepaid additions divided by quality additions excluding swaps.
+	measure 'Cost per QGA ex Swaps' =
+			DIVIDE (
+			    CALCULATE ( [Acquisition Cost], dim_plan_type[plan_type] = "Prepaid", dim_subscriber[qga_measurable] = 1 ),
+			    [QGA ex Swaps]
+			)
+		formatString: #,##0.00
+		displayFolder: 4 Acquisition quality
+		lineageTag: 0d4881e7-c9a3-428e-a2c1-32b006e85d05
+
+	/// Revenue movement attributed to bridge components. Use with a basis (YoY or MoM).
+	measure 'Bridge Amount' = SUM ( fact_revenue_bridge[amount] )
+		formatString: #,##0;-#,##0
+		displayFolder: 5 Bridge
+		lineageTag: c762143a-1f34-4509-84c9-f229d76fd2fe
+
+	/// Year-on-year net revenue movement by component. Components sum exactly to the movement.
+	measure 'Bridge YoY' = CALCULATE ( [Bridge Amount], fact_revenue_bridge[basis] = "YoY" )
+		formatString: #,##0;-#,##0
+		displayFolder: 5 Bridge
+		lineageTag: be7b6ae4-de09-4912-bf69-c4c1bc09ca96
+
+	/// Month-on-month net revenue movement by component. Components sum exactly to the movement.
+	measure 'Bridge MoM' = CALCULATE ( [Bridge Amount], fact_revenue_bridge[basis] = "MoM" )
+		formatString: #,##0;-#,##0
+		displayFolder: 5 Bridge
+		lineageTag: e27cefb1-09c6-41f6-b7cd-820792cfedd6
+
+	/// Control: year-on-year bridge total minus the movement in the fact table. Must be zero within R1 in any month with a bridge.
+	measure 'Bridge Check YoY' = CALCULATE ( [Bridge YoY], ALL ( dim_bridge_component ) ) - ( [Net Revenue] - [Net Revenue PY] )
+		formatString: #,##0.00
+		displayFolder: 5 Bridge
+		lineageTag: a0088ca9-8053-41ee-b26c-43d300564252
+
+	/// Control: month-on-month bridge total minus the movement in the fact table. Must be zero within R1 in any month with a bridge.
+	measure 'Bridge Check MoM' = CALCULATE ( [Bridge MoM], ALL ( dim_bridge_component ) ) - ( [Net Revenue] - [Net Revenue PM] )
+		formatString: #,##0.00
+		displayFolder: 5 Bridge
+		lineageTag: ba6d2cfa-43f8-4fec-8a09-0e1139500eca
+
+	/// Average network availability (percent) across districts and months in context.
+	measure 'Network Availability %' = AVERAGE ( fact_network_district_month[network_availability_pct] )
+		formatString: 0.0
+		displayFolder: 6 Diagnosis
+		lineageTag: eaf0b888-945a-444d-8bc1-a8e66ee4ed69
+
+	/// Average monthly net revenue from December 2025 to February 2026, before the March 2026 events (assumption).
+	measure 'Baseline Monthly Revenue' =
+			-- average monthly revenue in the three months before the March 2026 events
+			CALCULATE (
+			    AVERAGEX ( VALUES ( dim_date[month_start] ), [Net Revenue] ),
+			    ALL ( dim_date ),
+			    dim_date[date] >= DATE ( 2025, 12, 1 ),
+			    dim_date[date] <= DATE ( 2026, 2, 28 )
+			)
+		formatString: #,##0
+		displayFolder: 6 Diagnosis
+		lineageTag: 9e99e418-8cd3-43bf-ac42-343fda765438
+
+	/// Monthly net revenue minus the pre-event baseline. Single-month measure.
+	measure 'Revenue vs Baseline' = [Net Revenue] - [Baseline Monthly Revenue]
+		formatString: #,##0;-#,##0
+		displayFolder: 6 Diagnosis
+		lineageTag: 4931d108-40ec-434d-9acf-1332d010fef8
+
+	/// Revenue against baseline as a share of baseline.
+	measure 'Revenue vs Baseline %' = DIVIDE ( [Revenue vs Baseline], [Baseline Monthly Revenue] )
+		formatString: 0.0%
+		displayFolder: 6 Diagnosis
+		lineageTag: 26ae6b13-a40a-4c44-b053-453e5aa79cde
+
+	/// Monthly revenue exposed in the affected area: its pre-event baseline monthly revenue (assumption).
+	measure 'Revenue at Risk' = [Baseline Monthly Revenue]
+		formatString: #,##0
+		displayFolder: 6 Diagnosis
+		lineageTag: d2e2e3c0-2df2-49ff-9c11-014d22f390b3
+
+	/// Sum of each month's revenue against baseline over the selected months. Negative means revenue lost.
+	measure 'Revenue Lost vs Baseline' = SUMX ( VALUES ( dim_date[month_start] ), [Revenue vs Baseline] )
+		formatString: #,##0;-#,##0
+		displayFolder: 6 Diagnosis
+		lineageTag: 5a9ba977-0cb5-44cc-87bb-8c73cc6aa769
+
+	/// SIMs randomly assigned to receive the retention offer.
+	measure 'Test SIMs' = CALCULATE ( COUNTROWS ( fact_initiative_assignment ), fact_initiative_assignment[assignment_group] = "Test" )
+		formatString: #,##0
+		displayFolder: 7 Initiative
+		lineageTag: 8fe0da95-8a6d-4930-87ba-8c973d158b1d
+
+	/// Eligible SIMs randomly held back from the offer.
+	measure 'Control SIMs' = CALCULATE ( COUNTROWS ( fact_initiative_assignment ), fact_initiative_assignment[assignment_group] = "Control" )
+		formatString: #,##0
+		displayFolder: 7 Initiative
+		lineageTag: bee06e91-cd87-43de-b893-c99a632e5a27
+
+	/// Share of test SIMs that accepted the offer.
+	measure 'Offer Take-Up' = CALCULATE ( AVERAGE ( fact_initiative_assignment[accepted_offer] ), fact_initiative_assignment[assignment_group] = "Test" )
+		formatString: 0.0%
+		displayFolder: 7 Initiative
+		lineageTag: 53052857-3722-4e5e-b399-9681fdebf85e
+
+	/// Share of test SIMs that churned during the measurement period.
+	measure 'Churn Rate Test' = CALCULATE ( AVERAGE ( fact_initiative_assignment[churned_post] ), fact_initiative_assignment[assignment_group] = "Test" )
+		formatString: 0.0%
+		displayFolder: 7 Initiative
+		lineageTag: f58f2c85-f143-4821-950b-06e88d851bbb
+
+	/// Share of control SIMs that churned during the measurement period.
+	measure 'Churn Rate Control' = CALCULATE ( AVERAGE ( fact_initiative_assignment[churned_post] ), fact_initiative_assignment[assignment_group] = "Control" )
+		formatString: 0.0%
+		displayFolder: 7 Initiative
+		lineageTag: 0d2df4a6-c5eb-4ad4-8f73-0bc75fffed13
+
+	/// Test churn minus control churn. Negative means the offer reduced churn.
+	measure 'Churn Difference' = [Churn Rate Test] - [Churn Rate Control]
+		formatString: 0.0%;-0.0%
+		displayFolder: 7 Initiative
+		lineageTag: f592fbcd-d306-4fe2-8c04-95d5979a54c4
+
+	/// Average change in margin from each SIM's own baseline, test minus control (rand per SIM).
+	measure 'Incremental Margin per SIM' =
+			CALCULATE ( AVERAGE ( fact_initiative_assignment[margin_change] ), fact_initiative_assignment[assignment_group] = "Test" )
+			    - CALCULATE ( AVERAGE ( fact_initiative_assignment[margin_change] ), fact_initiative_assignment[assignment_group] = "Control" )
+		formatString: #,##0.00;-#,##0.00
+		displayFolder: 7 Initiative
+		lineageTag: 27e4c070-050f-4deb-aa56-f053d66d251a
+
+	/// Standard error of the incremental margin per SIM (unequal variances).
+	measure 'Incremental Margin SE' =
+			SQRT (
+			    DIVIDE ( CALCULATE ( VAR.S ( fact_initiative_assignment[margin_change] ), fact_initiative_assignment[assignment_group] = "Test" ), [Test SIMs] )
+			        + DIVIDE ( CALCULATE ( VAR.S ( fact_initiative_assignment[margin_change] ), fact_initiative_assignment[assignment_group] = "Control" ), [Control SIMs] )
+			)
+		formatString: #,##0.00
+		displayFolder: 7 Initiative
+		lineageTag: 4c8badd8-e405-43ac-8904-70f2397263b3
+
+	/// Lower bound of the 95% interval for incremental margin per SIM.
+	measure 'Incremental Margin CI Low' = [Incremental Margin per SIM] - 1.96 * [Incremental Margin SE]
+		formatString: #,##0.00;-#,##0.00
+		displayFolder: 7 Initiative
+		lineageTag: 924a2d40-8171-4c42-a631-df111566121e
+
+	/// Upper bound of the 95% interval for incremental margin per SIM.
+	measure 'Incremental Margin CI High' = [Incremental Margin per SIM] + 1.96 * [Incremental Margin SE]
+		formatString: #,##0.00;-#,##0.00
+		displayFolder: 7 Initiative
+		lineageTag: ac1f4be7-2b3b-4f4b-aea2-ed731de52652
+
+	/// Incremental margin per SIM times the number of test SIMs (rand).
+	measure 'Incremental Margin Total' = [Incremental Margin per SIM] * [Test SIMs]
+		formatString: #,##0;-#,##0
+		displayFolder: 7 Initiative
+		lineageTag: 5675244f-bbb0-4a21-8311-a5de4d7a3664
+
+	/// Data-quality breaks found by validation.
+	measure 'Breaks Found' = COUNTROWS ( controls_log )
+		formatString: #,##0
+		displayFolder: 8 Controls
+		lineageTag: 40065bb9-d08f-4923-8411-aedf80c5d7b5
+
+	/// Breaks corrected in the clean data.
+	measure 'Breaks Fixed' = CALCULATE ( COUNTROWS ( controls_log ), controls_log[status] = "Fixed" )
+		formatString: #,##0
+		displayFolder: 8 Controls
+		lineageTag: 63b2eed0-1ab9-43e9-9480-71d1032497cc
+
+	/// Breaks the mart cannot fix, escalated to the source owner.
+	measure 'Breaks Escalated' = CALCULATE ( COUNTROWS ( controls_log ), controls_log[status] = "Escalated" )
+		formatString: #,##0
+		displayFolder: 8 Controls
+		lineageTag: cfcbef42-0928-48d6-ad5e-9ffe4a9a3520
+
+	/// Month x region x plan type cells reconciled to billing.
+	measure 'Recon Cells' = COUNTROWS ( recon_summary )
+		formatString: #,##0
+		displayFolder: 8 Controls
+		lineageTag: b376cee8-44a7-43e4-b381-9c10a79b85ae
+
+	/// Cells within tolerance of billing before validation.
+	measure 'Recon Cells Within Tolerance Before' = SUM ( recon_summary[within_tolerance_before] )
+		formatString: #,##0
+		displayFolder: 8 Controls
+		lineageTag: e038b7b7-c1a3-4cad-9c98-58dfc64fa4e2
+
+	/// Cells within tolerance of billing after validation.
+	measure 'Recon Cells Within Tolerance After' = SUM ( recon_summary[within_tolerance_after] )
+		formatString: #,##0
+		displayFolder: 8 Controls
+		lineageTag: d2bb4267-9796-41df-8e30-435de38232f3
+
+	/// Mart net revenue minus billing net revenue, before validation.
+	measure 'Variance to Billing Before' = SUM ( recon_summary[var_net_revenue_before] )
+		formatString: #,##0.00;-#,##0.00
+		displayFolder: 8 Controls
+		lineageTag: 0b4ae9a2-c6e0-4489-8f82-95fac0febdc2
+
+	/// Mart net revenue minus billing net revenue, after validation.
+	measure 'Variance to Billing After' = SUM ( recon_summary[var_net_revenue_after] )
+		formatString: #,##0.00;-#,##0.00
+		displayFolder: 8 Controls
+		lineageTag: 856cc28f-6c98-42f5-af98-1022a142ba14
+
+	column Placeholder
+		dataType: string
+		isHidden
+		lineageTag: 92185198-fa1e-4d19-9b45-b18af091be6d
+		summarizeBy: none
+		sourceColumn: Placeholder
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = #table(type table [Placeholder = text], {})
+				in
+				    Source
+

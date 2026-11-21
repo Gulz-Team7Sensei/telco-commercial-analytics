@@ -1,0 +1,33 @@
+table plan_price_history
+	lineageTag: 20aebdd6-1707-4b1a-a2a8-8ca82e771690
+
+	column plan_id
+		dataType: string
+		isHidden
+		lineageTag: a515629b-9b3a-4eda-bb72-5144640a315f
+		summarizeBy: none
+		sourceColumn: plan_id
+
+	column effective_from
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: e43da73b-130e-4554-895d-e187dff45608
+		summarizeBy: none
+		sourceColumn: effective_from
+
+	column monthly_fee
+		dataType: double
+		lineageTag: 2855d581-7138-4c9c-960a-d04680518a99
+		summarizeBy: none
+		sourceColumn: monthly_fee
+
+	partition plan_price_history = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\plan_price_history.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"plan_id", type text}, {"effective_from", type date}, {"monthly_fee", type number}}, "en-US")
+				in
+				    Typed
+

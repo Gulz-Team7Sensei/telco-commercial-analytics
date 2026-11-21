@@ -1,0 +1,35 @@
+table fact_network_district_month
+	lineageTag: cfc21a70-945d-45a5-8c93-ed8ff8233904
+
+	column month_start
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: 3177a832-b750-44bc-b89f-ad177fc51a42
+		summarizeBy: none
+		sourceColumn: month_start
+
+	column district_id
+		dataType: int64
+		isHidden
+		lineageTag: c6a045fe-2d89-49be-825d-9afc964c770f
+		summarizeBy: none
+		sourceColumn: district_id
+
+	column network_availability_pct
+		dataType: double
+		isHidden
+		lineageTag: 7de48899-eade-402d-9fbf-d2509b19c687
+		summarizeBy: none
+		sourceColumn: network_availability_pct
+
+	partition fact_network_district_month = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\fact_network_district_month.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"month_start", type date}, {"district_id", Int64.Type}, {"network_availability_pct", type number}}, "en-US")
+				in
+				    Typed
+

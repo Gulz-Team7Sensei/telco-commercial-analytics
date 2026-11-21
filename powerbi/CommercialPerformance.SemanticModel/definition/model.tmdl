@@ -1,6 +1,7 @@
 model Model
 	culture: en-US
 	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
 	sourceQueryCulture: en-ZA
 	valueFilterBehavior: independent
 	dataAccessOptions
@@ -9,7 +10,29 @@ model Model
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_ProTooling = ["DevMode"]
+annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
+
+annotation PBI_QueryOrder = ["DataFolder"]
+
+ref table fact_subscriber_month
+ref table dim_subscriber
+ref table dim_plan
+ref table dim_plan_type
+ref table dim_district
+ref table dim_region
+ref table dim_channel
+ref table dim_segment
+ref table dim_date
+ref table fact_budget
+ref table fact_revenue_bridge
+ref table dim_bridge_component
+ref table fact_initiative_assignment
+ref table dim_initiative
+ref table fact_network_district_month
+ref table recon_summary
+ref table controls_log
+ref table plan_price_history
+ref table _Measures
 
 ref cultureInfo en-US
 

@@ -119,6 +119,8 @@ Net Revenue PY = CALCULATE ( [Net Revenue], DATEADD ( dim_date[date], -1, YEAR )
 Net Revenue YoY % = DIVIDE ( [Net Revenue] - [Net Revenue PY], [Net Revenue PY] )
 
 ARPU PY = CALCULATE ( [ARPU], DATEADD ( dim_date[date], -1, YEAR ) )
+
+Migrations = SUM ( fact_subscriber_month[is_migration] )   -- counted against the plan moved to
 ```
 
 ### Folder: 2 Prepaid behaviour
@@ -245,6 +247,8 @@ Revenue vs Baseline = [Net Revenue] - [Baseline Monthly Revenue]
 Revenue vs Baseline % = DIVIDE ( [Revenue vs Baseline], [Baseline Monthly Revenue] )
 
 Revenue at Risk = [Baseline Monthly Revenue]
+
+Revenue Lost vs Baseline = SUMX ( VALUES ( dim_date[month_start] ), [Revenue vs Baseline] )
 ```
 
 ### Folder: 7 Initiative
@@ -333,7 +337,13 @@ No filters except the month stated.
 | Incremental Margin per SIM, High risk | none | 17.38 (CI 3.84 to 30.91) |
 | Breaks Found / Fixed / Escalated | none | 6 / 4 / 2 |
 | Recon Cells Within Tolerance Before / After | none | 389 / 430 of 432 |
+| Migrations (Contract / Prepaid) | none | 921 / 0 |
+| Baseline Monthly Revenue, Ekurhuleni | none | 306,303.15 |
+| Revenue vs Baseline %, Ekurhuleni | Mar 2026 | −0.2878 |
+| Revenue Lost vs Baseline, Ekurhuleni | Mar to Apr 2026 | −133,821.88 |
+| Revenue Lost vs Baseline, Ekurhuleni | May to Oct 2026 | −69,363.63 |
 | Variance to Billing After | none | −3,351.93 |
 
 Month-by-month values for the core measures are in `data/reference/kpi_monthly.csv` (by plan
-type), `acquisition_quality.csv`, `offer_results.csv` and `budget_variance.csv`.
+type), `acquisition_quality.csv`, `offer_results.csv`, `budget_variance.csv` and
+`revenue_at_risk.csv` (district x month from Dec 2025).

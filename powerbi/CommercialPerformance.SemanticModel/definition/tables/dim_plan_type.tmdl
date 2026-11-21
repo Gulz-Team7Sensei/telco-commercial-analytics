@@ -1,0 +1,27 @@
+table dim_plan_type
+	lineageTag: acbdc6e1-5db2-4123-85c7-03d3c36eb777
+
+	column plan_type
+		dataType: string
+		lineageTag: 732bc054-393d-442f-87f6-b65079f8c69f
+		summarizeBy: none
+		sourceColumn: plan_type
+		sortByColumn: plan_type_sort
+
+	column plan_type_sort
+		dataType: int64
+		isHidden
+		lineageTag: f17a3aab-98e3-4d26-a3d3-3402d77deb22
+		summarizeBy: none
+		sourceColumn: plan_type_sort
+
+	partition dim_plan_type = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\dim_plan_type.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"plan_type", type text}, {"plan_type_sort", Int64.Type}}, "en-US")
+				in
+				    Typed
+

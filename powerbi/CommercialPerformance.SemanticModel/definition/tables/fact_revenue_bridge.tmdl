@@ -1,0 +1,70 @@
+table fact_revenue_bridge
+	lineageTag: 0fb02a25-1a97-4848-a1c8-37c5e29282c8
+
+	column basis
+		dataType: string
+		isHidden
+		lineageTag: 2409dbba-4cb8-4170-a9b9-a023c794067f
+		summarizeBy: none
+		sourceColumn: basis
+
+	column month_start
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: 8a85f89a-1980-454f-8c0e-79fc19e28fd4
+		summarizeBy: none
+		sourceColumn: month_start
+
+	column plan_type
+		dataType: string
+		isHidden
+		lineageTag: e41eaabd-b5dd-462b-83aa-7fad5696dd0e
+		summarizeBy: none
+		sourceColumn: plan_type
+
+	column district_id
+		dataType: int64
+		isHidden
+		lineageTag: 6d2b35fd-287a-4112-a492-6f9254c0dfc3
+		summarizeBy: none
+		sourceColumn: district_id
+
+	column channel_id
+		dataType: int64
+		isHidden
+		lineageTag: c510e72f-2856-4483-ae5a-e382fc32c203
+		summarizeBy: none
+		sourceColumn: channel_id
+
+	column segment_id
+		dataType: int64
+		isHidden
+		lineageTag: f82b633a-a78d-45da-bf6a-d75c7700c015
+		summarizeBy: none
+		sourceColumn: segment_id
+
+	column component
+		dataType: string
+		isHidden
+		lineageTag: b54437aa-91b7-4501-82cd-8b563cecdaf4
+		summarizeBy: none
+		sourceColumn: component
+
+	column amount
+		dataType: double
+		isHidden
+		lineageTag: 86eea0bf-2103-40b3-961e-432bfde85111
+		summarizeBy: none
+		sourceColumn: amount
+
+	partition fact_revenue_bridge = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\fact_revenue_bridge.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"basis", type text}, {"month_start", type date}, {"plan_type", type text}, {"district_id", Int64.Type}, {"channel_id", Int64.Type}, {"segment_id", Int64.Type}, {"component", type text}, {"amount", type number}}, "en-US")
+				in
+				    Typed
+

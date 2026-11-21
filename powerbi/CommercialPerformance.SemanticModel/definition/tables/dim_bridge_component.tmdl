@@ -1,0 +1,33 @@
+table dim_bridge_component
+	lineageTag: 2777d5c0-00d0-4a07-a4da-4535477d80e3
+
+	column component
+		dataType: string
+		lineageTag: 6bc07fd2-7b06-4ba2-85ce-46a3baf1b857
+		summarizeBy: none
+		sourceColumn: component
+		sortByColumn: component_sort
+
+	column component_sort
+		dataType: int64
+		isHidden
+		lineageTag: ca280fe3-2318-4b50-b62f-1e547a7b4cd5
+		summarizeBy: none
+		sourceColumn: component_sort
+
+	column component_group
+		dataType: string
+		lineageTag: 1cfe0ec1-924c-43bb-b53b-439ce1a72b3d
+		summarizeBy: none
+		sourceColumn: component_group
+
+	partition dim_bridge_component = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\dim_bridge_component.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"component", type text}, {"component_sort", Int64.Type}, {"component_group", type text}}, "en-US")
+				in
+				    Typed
+

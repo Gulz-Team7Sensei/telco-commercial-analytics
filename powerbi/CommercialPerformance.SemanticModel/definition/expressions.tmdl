@@ -1,0 +1,6 @@
+/// Absolute path to this project's data\model folder (output of src/build_model_tables.py). Change it after cloning the repo.
+expression DataFolder = "C:\portfolio\telco-commercial-analytics\data\model" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 7d66336d-8c7e-4220-8b5b-10c2d3118d42
+
+	annotation PBI_ResultType = Text
+

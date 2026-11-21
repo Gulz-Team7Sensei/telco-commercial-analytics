@@ -1,0 +1,66 @@
+table dim_initiative
+	lineageTag: 292ec865-e866-40dd-802f-9e2473a0bca4
+
+	column initiative_id
+		dataType: string
+		isHidden
+		lineageTag: abb92d4b-69c4-4785-b0c7-9b7d5b7878cb
+		summarizeBy: none
+		sourceColumn: initiative_id
+
+	column initiative_name
+		dataType: string
+		lineageTag: 1e53b3a4-d484-47fd-a5ee-df8662bb57b8
+		summarizeBy: none
+		sourceColumn: initiative_name
+
+	column launch_month
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 97261e3e-c715-45b4-8225-dd89b545a572
+		summarizeBy: none
+		sourceColumn: launch_month
+
+	column end_month
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 23a7cd35-ff52-4cb7-99be-7f0083fbf389
+		summarizeBy: none
+		sourceColumn: end_month
+
+	column baseline_start
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 72c5910a-973f-411c-963e-ba9aab5dcffe
+		summarizeBy: none
+		sourceColumn: baseline_start
+
+	column baseline_end
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 5b5029e4-98a2-4b00-9595-0baa636e2eee
+		summarizeBy: none
+		sourceColumn: baseline_end
+
+	column target_description
+		dataType: string
+		lineageTag: d03c5e2c-8c72-47b0-9a3b-2fe62ec67c4e
+		summarizeBy: none
+		sourceColumn: target_description
+
+	column offer_description
+		dataType: string
+		lineageTag: e7ec975f-81b8-43c7-8434-71a58fb58bbd
+		summarizeBy: none
+		sourceColumn: offer_description
+
+	partition dim_initiative = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\dim_initiative.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"initiative_id", type text}, {"initiative_name", type text}, {"launch_month", type date}, {"end_month", type date}, {"baseline_start", type date}, {"baseline_end", type date}, {"target_description", type text}, {"offer_description", type text}}, "en-US")
+				in
+				    Typed
+

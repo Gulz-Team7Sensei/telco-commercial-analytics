@@ -1,0 +1,63 @@
+table fact_budget
+	lineageTag: 5a18541b-8d97-4cb8-a8ed-47b418a5b26b
+
+	column month_start
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: 6b1192ad-5274-4b05-a2b5-617c75425038
+		summarizeBy: none
+		sourceColumn: month_start
+
+	column region_id
+		dataType: int64
+		isHidden
+		lineageTag: efbd94c7-c532-4589-a670-51722c39a188
+		summarizeBy: none
+		sourceColumn: region_id
+
+	column plan_type
+		dataType: string
+		isHidden
+		lineageTag: 03d07098-a013-4542-ba65-e3946e6252d0
+		summarizeBy: none
+		sourceColumn: plan_type
+
+	column budget_net_revenue
+		dataType: double
+		isHidden
+		lineageTag: 514929ea-920d-4bbd-ada3-a4329c8fddc5
+		summarizeBy: none
+		sourceColumn: budget_net_revenue
+
+	column budget_gross_adds
+		dataType: int64
+		isHidden
+		lineageTag: 78e2282f-dc4c-4e2c-87bb-6c9c0fd05d35
+		summarizeBy: none
+		sourceColumn: budget_gross_adds
+
+	column budget_churn
+		dataType: int64
+		isHidden
+		lineageTag: 9ca20c0a-e61c-4e60-bc03-49a07c5969a0
+		summarizeBy: none
+		sourceColumn: budget_churn
+
+	column budget_closing_base
+		dataType: int64
+		isHidden
+		lineageTag: 0a02349b-5f0c-4d81-b07f-c127f4041d61
+		summarizeBy: none
+		sourceColumn: budget_closing_base
+
+	partition fact_budget = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\fact_budget.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"month_start", type date}, {"region_id", Int64.Type}, {"plan_type", type text}, {"budget_net_revenue", type number}, {"budget_gross_adds", Int64.Type}, {"budget_churn", Int64.Type}, {"budget_closing_base", Int64.Type}}, "en-US")
+				in
+				    Typed
+

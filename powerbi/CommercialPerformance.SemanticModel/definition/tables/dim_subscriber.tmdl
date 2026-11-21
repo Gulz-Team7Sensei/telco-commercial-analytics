@@ -1,0 +1,104 @@
+table dim_subscriber
+	lineageTag: cc6bcaae-9d5f-4e11-9d86-2468679154cf
+
+	column subscriber_id
+		dataType: int64
+		isHidden
+		lineageTag: c4c6533c-3d5e-4d23-a341-9a71682586e5
+		summarizeBy: none
+		sourceColumn: subscriber_id
+
+	column device_id
+		dataType: int64
+		isHidden
+		lineageTag: 946495f1-24b0-4aea-9bfb-837cd652f0d0
+		summarizeBy: none
+		sourceColumn: device_id
+
+	column activation_month
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 834117e2-3996-46ff-ac46-6afd472a20ff
+		summarizeBy: none
+		sourceColumn: activation_month
+
+	column district_id
+		dataType: int64
+		isHidden
+		lineageTag: c8800398-baa9-4bf0-bcf7-b4239bb8335a
+		summarizeBy: none
+		sourceColumn: district_id
+
+	column channel_id
+		dataType: int64
+		isHidden
+		lineageTag: 88719640-f6d7-4972-a059-be8e300e2d96
+		summarizeBy: none
+		sourceColumn: channel_id
+
+	column segment_id
+		dataType: int64
+		isHidden
+		lineageTag: a8815c43-bdc8-480b-ae85-985df5de42ca
+		summarizeBy: none
+		sourceColumn: segment_id
+
+	column usage_profile
+		dataType: string
+		lineageTag: a12f0232-afcf-4c08-bbd0-15535cad2757
+		summarizeBy: none
+		sourceColumn: usage_profile
+
+	column in_opening_base
+		dataType: int64
+		lineageTag: 3e723d25-4589-44e7-8961-551661571a70
+		summarizeBy: none
+		sourceColumn: in_opening_base
+
+	column acquisition_cost
+		dataType: double
+		lineageTag: 6e2886e7-9a43-44dc-b75d-ec08e9b59797
+		summarizeBy: none
+		sourceColumn: acquisition_cost
+
+	column activation_plan_id
+		dataType: string
+		isHidden
+		lineageTag: 1cac5277-0e85-43b9-9de7-e847b38063eb
+		summarizeBy: none
+		sourceColumn: activation_plan_id
+
+	column is_sim_swap
+		dataType: int64
+		lineageTag: 459af9e2-c452-493c-afa2-f6c33ff62e6e
+		summarizeBy: none
+		sourceColumn: is_sim_swap
+
+	column is_qga
+		dataType: int64
+		lineageTag: 1aae2c1e-a60a-48d6-8d12-feef9802e387
+		summarizeBy: none
+		sourceColumn: is_qga
+
+	column is_qga_ex_swaps
+		dataType: int64
+		lineageTag: 9466cb48-ac13-44d3-8cf8-7a0355cb3bc2
+		summarizeBy: none
+		sourceColumn: is_qga_ex_swaps
+
+	column qga_measurable
+		dataType: int64
+		lineageTag: ceafa493-73c7-44f5-bd4a-42b63a8ca911
+		summarizeBy: none
+		sourceColumn: qga_measurable
+
+	partition dim_subscriber = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\dim_subscriber.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"subscriber_id", Int64.Type}, {"device_id", Int64.Type}, {"activation_month", type date}, {"district_id", Int64.Type}, {"channel_id", Int64.Type}, {"segment_id", Int64.Type}, {"usage_profile", type text}, {"in_opening_base", Int64.Type}, {"acquisition_cost", type number}, {"activation_plan_id", type text}, {"is_sim_swap", Int64.Type}, {"is_qga", Int64.Type}, {"is_qga_ex_swaps", Int64.Type}, {"qga_measurable", Int64.Type}}, "en-US")
+				in
+				    Typed
+

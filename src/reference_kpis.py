@@ -9,6 +9,7 @@ Reads data/clean, writes data/reference:
     district_month.csv      revenue, recharges and network availability by district
     profile_month.csv       prepaid recharge behaviour by usage profile, Gauteng against elsewhere
     budget_variance.csv     actual against budget by month, region and plan type
+    revenue_at_risk.csv     revenue against the pre-event baseline by district, Dec 2025 onwards
 
 Definitions follow docs/metric_dictionary.md.
 
@@ -69,7 +70,7 @@ def kpi_monthly(d):
            .agg(closing_base=("is_active", "sum"), gross_additions=("is_gross_add", "sum"),
                 sim_swaps=("swap_add", "sum"), churn=("is_churn", "sum"),
                 net_revenue=("net_revenue", "sum"), direct_margin=("margin", "sum"),
-                recharges=("recharge_count", "sum"),
+                recharges=("recharge_count", "sum"), migrations=("is_migration", "sum"),
                 recharging_sims=("recharge_count", lambda s: int((s > 0).sum()))))
     k = k.sort_values(["plan_type", "month_start"])
     k["opening_base"] = k.groupby("plan_type")["closing_base"].shift(1)
@@ -265,6 +266,26 @@ def profile_month(d):
     return _r(out)
 
 
+BASELINE_MONTHS = ("2025-12-01", "2026-02-01")   # three months before the March 2026 events
+
+
+def revenue_at_risk(d):
+    """Monthly net revenue against each district's pre-event baseline.
+
+    Baseline = average monthly net revenue from December 2025 to February 2026. Revenue at risk
+    in a district is its baseline; the shortfall is each month's revenue minus the baseline.
+    """
+    f = d["fact"]
+    m = f.groupby(["month_start", "district_id"], as_index=False)["net_revenue"].sum()
+    lo, hi = (pd.Timestamp(x) for x in BASELINE_MONTHS)
+    base = (m[(m.month_start >= lo) & (m.month_start <= hi)]
+              .groupby("district_id")["net_revenue"].mean().rename("baseline_monthly_revenue"))
+    out = m[m.month_start >= lo].merge(base, on="district_id").merge(d["dist"], on="district_id")
+    out["revenue_vs_baseline"] = out.net_revenue - out.baseline_monthly_revenue
+    out["revenue_vs_baseline_pct"] = out.revenue_vs_baseline / out.baseline_monthly_revenue
+    return _r(out.sort_values(["district_id", "month_start"]))
+
+
 def budget_variance(d):
     f = d["fact"]
     a = (f.groupby(["month_start", "region_id", "plan_type"], as_index=False)
@@ -294,7 +315,7 @@ def main():
     results = {"kpi_monthly": k, "bridge": b, "bridge_totals": totals,
                "acquisition_quality": acquisition_quality(d), "offer_results": offer_results(d),
                "district_month": district_month(d), "profile_month": profile_month(d),
-               "budget_variance": budget_variance(d)}
+               "budget_variance": budget_variance(d), "revenue_at_risk": revenue_at_risk(d)}
     for name, df in results.items():
         df.to_csv(out / f"{name}.csv", index=False, date_format="%Y-%m-%d")
 
@@ -316,6 +337,11 @@ def main():
     print(results["offer_results"][["risk_group", "test_sims", "control_sims", "churn_difference",
                                     "incremental_margin_per_sim", "incr_margin_ci_low",
                                     "incr_margin_ci_high"]].to_string(index=False))
+    rar = results["revenue_at_risk"]
+    ek = rar[rar.district == "Ekurhuleni"].set_index("month_start")
+    print(f"\nEkurhuleni: revenue at risk (baseline) R{ek.baseline_monthly_revenue.iloc[0]:,.2f} a month")
+    print(ek.loc["2026-03-01":"2026-08-01", ["net_revenue", "revenue_vs_baseline",
+                                             "revenue_vs_baseline_pct"]].to_string())
     print(f"\nWrote {len(results)} reference tables to {out}/")
 
 

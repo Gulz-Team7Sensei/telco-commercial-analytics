@@ -1,0 +1,112 @@
+table recon_summary
+	lineageTag: 92d22531-4385-429e-9316-64d37a7c28ea
+
+	column month_start
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: 1f3dca4d-9b0c-4b50-9e70-a625581345cd
+		summarizeBy: none
+		sourceColumn: month_start
+
+	column region_id
+		dataType: int64
+		isHidden
+		lineageTag: 554915dc-2d70-462c-b684-093af658a123
+		summarizeBy: none
+		sourceColumn: region_id
+
+	column plan_type
+		dataType: string
+		isHidden
+		lineageTag: f30289df-a470-4fa7-bf86-d33111bffa3c
+		summarizeBy: none
+		sourceColumn: plan_type
+
+	column source_row_count
+		dataType: int64
+		isHidden
+		lineageTag: 0658b07a-6651-4355-85fb-25367f88969a
+		summarizeBy: none
+		sourceColumn: source_row_count
+
+	column source_active_subscribers
+		dataType: int64
+		isHidden
+		lineageTag: 90d02d34-11f0-4d05-a90d-b7f638f04242
+		summarizeBy: none
+		sourceColumn: source_active_subscribers
+
+	column source_net_revenue
+		dataType: double
+		isHidden
+		lineageTag: 5f9420a1-0c5d-418c-80ab-a992d6568c7b
+		summarizeBy: none
+		sourceColumn: source_net_revenue
+
+	column var_row_count_before
+		dataType: int64
+		isHidden
+		lineageTag: cbc4a5a1-e5b3-4a47-9c4d-d40c51cf4884
+		summarizeBy: none
+		sourceColumn: var_row_count_before
+
+	column var_active_before
+		dataType: int64
+		isHidden
+		lineageTag: 60b8758b-c60e-4bdd-906e-ddb483132a36
+		summarizeBy: none
+		sourceColumn: var_active_before
+
+	column var_net_revenue_before
+		dataType: double
+		isHidden
+		lineageTag: 0c9a0ac4-78cd-4df3-91af-9bbde85a0e4d
+		summarizeBy: none
+		sourceColumn: var_net_revenue_before
+
+	column within_tolerance_before
+		dataType: int64
+		isHidden
+		lineageTag: 3794172d-d51c-40f5-a208-6cb671d0abdc
+		summarizeBy: none
+		sourceColumn: within_tolerance_before
+
+	column var_row_count_after
+		dataType: int64
+		isHidden
+		lineageTag: 72e518ea-2450-4bd2-a8ec-067395ddbc50
+		summarizeBy: none
+		sourceColumn: var_row_count_after
+
+	column var_active_after
+		dataType: int64
+		isHidden
+		lineageTag: 3802ff9f-886d-4ea6-8e4a-39e2b64de692
+		summarizeBy: none
+		sourceColumn: var_active_after
+
+	column var_net_revenue_after
+		dataType: double
+		isHidden
+		lineageTag: c4a271c8-7f67-4cde-b627-cc31f2e09f83
+		summarizeBy: none
+		sourceColumn: var_net_revenue_after
+
+	column within_tolerance_after
+		dataType: int64
+		isHidden
+		lineageTag: 6cda192f-12e2-4d87-9231-4dd50bc1c582
+		summarizeBy: none
+		sourceColumn: within_tolerance_after
+
+	partition recon_summary = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\recon_summary.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"month_start", type date}, {"region_id", Int64.Type}, {"plan_type", type text}, {"source_row_count", Int64.Type}, {"source_active_subscribers", Int64.Type}, {"source_net_revenue", type number}, {"var_row_count_before", Int64.Type}, {"var_active_before", Int64.Type}, {"var_net_revenue_before", type number}, {"within_tolerance_before", Int64.Type}, {"var_row_count_after", Int64.Type}, {"var_active_after", Int64.Type}, {"var_net_revenue_after", type number}, {"within_tolerance_after", Int64.Type}}, "en-US")
+				in
+				    Typed
+

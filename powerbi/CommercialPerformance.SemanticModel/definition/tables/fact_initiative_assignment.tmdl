@@ -1,0 +1,103 @@
+table fact_initiative_assignment
+	lineageTag: 3a1ffc71-7ce1-4819-bf39-5574645c1fad
+
+	column initiative_id
+		dataType: string
+		isHidden
+		lineageTag: a6ccc36b-f925-481e-9218-bd1796d4b724
+		summarizeBy: none
+		sourceColumn: initiative_id
+
+	column subscriber_id
+		dataType: int64
+		isHidden
+		lineageTag: 3c3b1c46-d4d3-4720-9029-f8dff7fa71c2
+		summarizeBy: none
+		sourceColumn: subscriber_id
+
+	column assignment_group
+		dataType: string
+		lineageTag: c567729e-bae7-4b5e-832a-3457d51670e7
+		summarizeBy: none
+		sourceColumn: assignment_group
+
+	column risk_group
+		dataType: string
+		lineageTag: 0e958ca9-4cf1-4f85-b863-3a581cbdc614
+		summarizeBy: none
+		sourceColumn: risk_group
+		sortByColumn: risk_sort
+
+	column accepted_offer
+		dataType: int64
+		isHidden
+		lineageTag: 647ed348-a5e4-439f-8371-27b8d90ac2b1
+		summarizeBy: none
+		sourceColumn: accepted_offer
+
+	column recharges_prior_3m
+		dataType: int64
+		isHidden
+		lineageTag: fd32e02f-a4dd-48f1-8a48-c757fce87355
+		summarizeBy: none
+		sourceColumn: recharges_prior_3m
+
+	column recharges_recent_3m
+		dataType: int64
+		isHidden
+		lineageTag: 43ee2cf5-3547-46d0-8d05-b24cd5d96937
+		summarizeBy: none
+		sourceColumn: recharges_recent_3m
+
+	column baseline_avg_revenue
+		dataType: double
+		isHidden
+		lineageTag: eac07bd4-f4bc-44cd-a1e9-577625c9d1c8
+		summarizeBy: none
+		sourceColumn: baseline_avg_revenue
+
+	column margin_baseline
+		dataType: double
+		isHidden
+		lineageTag: 9bfb8769-8827-4d94-ac51-f742aea93fbd
+		summarizeBy: none
+		sourceColumn: margin_baseline
+
+	column margin_post
+		dataType: double
+		isHidden
+		lineageTag: cacc769a-6a82-47e2-9a0b-09a255819c83
+		summarizeBy: none
+		sourceColumn: margin_post
+
+	column churned_post
+		dataType: int64
+		isHidden
+		lineageTag: 354c04b5-7fa5-4bef-b5d8-0e0207711f5b
+		summarizeBy: none
+		sourceColumn: churned_post
+
+	column margin_change
+		dataType: double
+		isHidden
+		lineageTag: 9caea108-f98e-4254-a1a6-def0346c0736
+		summarizeBy: none
+		sourceColumn: margin_change
+
+	column risk_sort
+		dataType: int64
+		isHidden
+		lineageTag: 6d4bf6e6-6a0e-4e92-a882-12f1713a0a28
+		summarizeBy: none
+		sourceColumn: risk_sort
+
+	partition fact_initiative_assignment = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\fact_initiative_assignment.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"initiative_id", type text}, {"subscriber_id", Int64.Type}, {"assignment_group", type text}, {"risk_group", type text}, {"accepted_offer", Int64.Type}, {"recharges_prior_3m", Int64.Type}, {"recharges_recent_3m", Int64.Type}, {"baseline_avg_revenue", type number}, {"margin_baseline", type number}, {"margin_post", type number}, {"churned_post", Int64.Type}, {"margin_change", type number}, {"risk_sort", Int64.Type}}, "en-US")
+				in
+				    Typed
+

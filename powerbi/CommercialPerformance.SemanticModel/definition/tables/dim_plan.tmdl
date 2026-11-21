@@ -1,0 +1,46 @@
+table dim_plan
+	lineageTag: 7b8eb94c-5ec4-4c7d-bdd0-78aa61983174
+
+	column plan_id
+		dataType: string
+		isHidden
+		lineageTag: 9259be62-ea1d-42df-b9f7-3d4b41b54e70
+		summarizeBy: none
+		sourceColumn: plan_id
+
+	column plan_name
+		dataType: string
+		lineageTag: 1cb89d3f-8ea6-429e-9cc0-7616351c2e6f
+		summarizeBy: none
+		sourceColumn: plan_name
+		sortByColumn: plan_sort
+
+	column plan_type
+		dataType: string
+		lineageTag: c1c689fe-2363-4923-bfaf-542c82e93fd6
+		summarizeBy: none
+		sourceColumn: plan_type
+
+	column monthly_fee
+		dataType: double
+		lineageTag: c6a6f3f2-2b94-4739-9999-61fc2e78bb23
+		summarizeBy: none
+		sourceColumn: monthly_fee
+
+	column plan_sort
+		dataType: int64
+		isHidden
+		lineageTag: 6d5fb4ab-a743-4f0d-9cef-16807610d822
+		summarizeBy: none
+		sourceColumn: plan_sort
+
+	partition dim_plan = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\dim_plan.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"plan_id", type text}, {"plan_name", type text}, {"plan_type", type text}, {"monthly_fee", type number}, {"plan_sort", Int64.Type}}, "en-US")
+				in
+				    Typed
+

@@ -1,0 +1,55 @@
+table controls_log
+	lineageTag: 6f7971e2-034f-4a19-9bad-526846896799
+
+	column check_id
+		dataType: string
+		lineageTag: 7a5ce947-6383-432d-9001-040ce754a610
+		summarizeBy: none
+		sourceColumn: check_id
+
+	column description
+		dataType: string
+		lineageTag: 0f11faf0-fd52-4969-99f3-5ae83ab281d2
+		summarizeBy: none
+		sourceColumn: description
+
+	column months_affected
+		dataType: string
+		lineageTag: d90fc49c-0896-4768-82b0-fb0dcf692744
+		summarizeBy: none
+		sourceColumn: months_affected
+
+	column rows_affected
+		dataType: int64
+		lineageTag: 06f936a2-6c13-4006-9af6-d89b6728bf02
+		summarizeBy: none
+		sourceColumn: rows_affected
+
+	column net_revenue_impact
+		dataType: double
+		lineageTag: ba7555f4-3ea8-4d83-9be3-dbdb19f9eaf2
+		summarizeBy: none
+		sourceColumn: net_revenue_impact
+
+	column action_taken
+		dataType: string
+		lineageTag: 7a820fa6-7444-4413-aa3d-4b60face758b
+		summarizeBy: none
+		sourceColumn: action_taken
+
+	column status
+		dataType: string
+		lineageTag: fe1b9316-b8e4-4ae6-9bc3-feeb2ccb2e54
+		summarizeBy: none
+		sourceColumn: status
+
+	partition controls_log = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\controls_log.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"check_id", type text}, {"description", type text}, {"months_affected", type text}, {"rows_affected", Int64.Type}, {"net_revenue_impact", type number}, {"action_taken", type text}, {"status", type text}}, "en-US")
+				in
+				    Typed
+

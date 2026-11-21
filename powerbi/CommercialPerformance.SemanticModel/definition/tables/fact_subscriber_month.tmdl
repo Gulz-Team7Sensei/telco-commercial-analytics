@@ -1,0 +1,140 @@
+table fact_subscriber_month
+	lineageTag: 36dc397a-a8f7-4dba-8edb-3280b14996e5
+
+	column month_start
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: ca590592-4209-41dc-99dc-473c2032c44c
+		summarizeBy: none
+		sourceColumn: month_start
+
+	column subscriber_id
+		dataType: int64
+		isHidden
+		lineageTag: 5ac6d128-b710-45a3-9e39-0e7bc1f11737
+		summarizeBy: none
+		sourceColumn: subscriber_id
+
+	column plan_id
+		dataType: string
+		isHidden
+		lineageTag: 9c6fd763-1858-4deb-a5b8-4e18d6237afe
+		summarizeBy: none
+		sourceColumn: plan_id
+
+	column prev_plan_id
+		dataType: string
+		isHidden
+		lineageTag: 1bf69286-28c9-4b3e-a17b-4a4965478b3d
+		summarizeBy: none
+		sourceColumn: prev_plan_id
+
+	column is_active
+		dataType: int64
+		isHidden
+		lineageTag: 5a9e105d-0493-46ca-8cef-14f5e7e2339b
+		summarizeBy: none
+		sourceColumn: is_active
+
+	column is_gross_add
+		dataType: int64
+		isHidden
+		lineageTag: b78a605f-5b7e-4ce5-af89-2394ee687d7a
+		summarizeBy: none
+		sourceColumn: is_gross_add
+
+	column is_churn
+		dataType: int64
+		isHidden
+		lineageTag: 575d7a3f-6911-47b6-8100-b458ab526e15
+		summarizeBy: none
+		sourceColumn: is_churn
+
+	column is_migration
+		dataType: int64
+		isHidden
+		lineageTag: c93bc6af-bb3b-4f4b-9785-aca2ca7dea8f
+		summarizeBy: none
+		sourceColumn: is_migration
+
+	column recharge_count
+		dataType: int64
+		isHidden
+		lineageTag: 5d6edd7b-2910-4bc1-9809-37faa0a284dc
+		summarizeBy: none
+		sourceColumn: recharge_count
+
+	column months_since_last_recharge
+		dataType: double
+		isHidden
+		lineageTag: aaabe357-c7de-4777-9d6a-d4529f0b6824
+		summarizeBy: none
+		sourceColumn: months_since_last_recharge
+
+	column revenue_data
+		dataType: double
+		isHidden
+		lineageTag: 099e2fba-12cf-4c14-8ad1-686d7109f4d2
+		summarizeBy: none
+		sourceColumn: revenue_data
+
+	column revenue_voice
+		dataType: double
+		isHidden
+		lineageTag: 101fc339-e8dc-49f9-a25f-5e72dfd011ee
+		summarizeBy: none
+		sourceColumn: revenue_voice
+
+	column revenue_other
+		dataType: double
+		isHidden
+		lineageTag: 01b931a4-03f3-495f-a711-bb76c663bfa8
+		summarizeBy: none
+		sourceColumn: revenue_other
+
+	column direct_cost
+		dataType: double
+		isHidden
+		lineageTag: 88774aae-035c-4b57-9430-b961ae60bd25
+		summarizeBy: none
+		sourceColumn: direct_cost
+
+	column data_mb
+		dataType: double
+		isHidden
+		lineageTag: 8856571d-bf10-4cb2-b122-314a6524f245
+		summarizeBy: none
+		sourceColumn: data_mb
+
+	column voice_minutes
+		dataType: double
+		isHidden
+		lineageTag: 9d860f47-9f5a-4d53-9607-5b2b482130f3
+		summarizeBy: none
+		sourceColumn: voice_minutes
+
+	column net_revenue
+		dataType: double
+		isHidden
+		lineageTag: fde4a6f6-e761-4105-a212-508c973db0a7
+		summarizeBy: none
+		sourceColumn: net_revenue
+
+	column direct_margin
+		dataType: double
+		isHidden
+		lineageTag: c39899b8-6ab8-4d2c-b614-9fb76f022742
+		summarizeBy: none
+		sourceColumn: direct_margin
+
+	partition fact_subscriber_month = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\fact_subscriber_month.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"month_start", type date}, {"subscriber_id", Int64.Type}, {"plan_id", type text}, {"prev_plan_id", type text}, {"is_active", Int64.Type}, {"is_gross_add", Int64.Type}, {"is_churn", Int64.Type}, {"is_migration", Int64.Type}, {"recharge_count", Int64.Type}, {"months_since_last_recharge", type number}, {"revenue_data", type number}, {"revenue_voice", type number}, {"revenue_other", type number}, {"direct_cost", type number}, {"data_mb", type number}, {"voice_minutes", type number}, {"net_revenue", type number}, {"direct_margin", type number}}, "en-US")
+				in
+				    Typed
+
