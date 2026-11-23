@@ -1,0 +1,196 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "4217caa2d21865f11168",
+  "position": {
+    "x": 36.864000000000004,
+    "y": 0,
+    "z": 0,
+    "height": 1026.048,
+    "width": 1453.056,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_channel"
+                    }
+                  },
+                  "Property": "channel"
+                }
+              },
+              "queryRef": "dim_channel.channel",
+              "nativeQueryRef": "channel"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_initiative_assignment"
+                    }
+                  },
+                  "Property": "assignment_group"
+                }
+              },
+              "queryRef": "fact_initiative_assignment.assignment_group",
+              "nativeQueryRef": "assignment_group"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_initiative_assignment"
+                    }
+                  },
+                  "Property": "risk_group"
+                }
+              },
+              "queryRef": "fact_initiative_assignment.risk_group",
+              "nativeQueryRef": "risk_group"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_subscriber"
+                    }
+                  },
+                  "Property": "acquisition_cost"
+                }
+              },
+              "queryRef": "dim_subscriber.acquisition_cost",
+              "nativeQueryRef": "acquisition_cost"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_segment"
+                    }
+                  },
+                  "Property": "segment"
+                }
+              },
+              "queryRef": "dim_segment.segment",
+              "nativeQueryRef": "segment"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "values": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "23D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "grid": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "20D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "ff3a40fe12db411c6364",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_channel"
+              }
+            },
+            "Property": "channel"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "01ae214dc948ced951bf",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_initiative_assignment"
+              }
+            },
+            "Property": "assignment_group"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "ddadff483fdd375dbb34",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_initiative_assignment"
+              }
+            },
+            "Property": "risk_group"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "f3c54b9073ec51b95fa2",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_subscriber"
+              }
+            },
+            "Property": "acquisition_cost"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "92523ec19b1ad3ce227b",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_segment"
+              }
+            },
+            "Property": "segment"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
+}

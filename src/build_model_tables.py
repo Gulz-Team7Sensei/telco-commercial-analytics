@@ -8,6 +8,7 @@ DAX are done once here, so the measures in Power BI stay simple sums and ratios:
     fact_initiative_assignment  adds each SIM's baseline margin, post-launch margin and churn
     fact_revenue_bridge         the revenue bridge by month, plan type, district, channel, segment
     dim_plan_type, dim_bridge_component   small lookup tables
+    metric_definitions          the first table of docs/metric_dictionary.md, for the lineage page
     everything else             copied unchanged, including controls_log and recon_summary
 
 The same functions produce data/reference (see reference_kpis.py), so the two cannot drift.
@@ -33,6 +34,24 @@ COMPONENTS = [  # component, sort order, group shown on the bridge
     ("Contract usage", 7, "Usage"), ("Lapsed", 8, "Usage"), ("Resumed", 9, "Usage"),
     ("Recharge frequency", 10, "Usage"), ("Recharge value", 11, "Usage"),
 ]
+
+
+def metric_definitions(dictionary: Path) -> pd.DataFrame:
+    """Read the first markdown table in the metric dictionary into a table for the report."""
+    rows, header = [], None
+    for line in dictionary.read_text(encoding="utf-8").splitlines():
+        if not line.startswith("|"):
+            if header:
+                break
+            continue
+        cells = [c.strip().replace("`", "") for c in line.strip().strip("|").split("|")]
+        if header is None:
+            header = cells
+        elif not set("".join(cells)) <= set("-: "):
+            rows.append(cells)
+    df = pd.DataFrame(rows, columns=[h.lower().replace(" ", "_") for h in header])
+    df.insert(0, "metric_sort", range(1, len(df) + 1))
+    return df
 
 
 def build(clean: Path, out: Path):
@@ -98,6 +117,8 @@ def build(clean: Path, out: Path):
          "dim_bridge_component")
     save(pd.DataFrame({"plan_type": ["Prepaid", "Contract"], "plan_type_sort": [1, 2]}),
          "dim_plan_type")
+    save(metric_definitions(Path(__file__).resolve().parent.parent / "docs" / "metric_dictionary.md"),
+         "metric_definitions")
 
     for p in sorted(out.glob("*.csv")):
         n = sum(1 for _ in open(p, encoding="utf-8")) - 1

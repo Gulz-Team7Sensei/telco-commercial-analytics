@@ -1,0 +1,46 @@
+/// Metric dictionary for the lineage page: definition, source columns and verification status of each KPI. Disconnected.
+table metric_definitions
+	lineageTag: 04f3201e-48e2-4d56-8363-e4a52582c047
+
+	column metric_sort
+		dataType: int64
+		isHidden
+		lineageTag: ef971b5a-1d9c-4af1-80c1-c52bbf8d9bbd
+		summarizeBy: none
+		sourceColumn: metric_sort
+
+	column metric
+		dataType: string
+		lineageTag: f6957466-493f-408d-840a-fb73cbb2ea88
+		summarizeBy: none
+		sourceColumn: metric
+		sortByColumn: metric_sort
+
+	column definition
+		dataType: string
+		lineageTag: 60e1f56c-1664-47dd-9e28-d0635414adc5
+		summarizeBy: none
+		sourceColumn: definition
+
+	column source_columns
+		dataType: string
+		lineageTag: f6a0299c-dac0-4d93-a3f1-3df6057bf039
+		summarizeBy: none
+		sourceColumn: source_columns
+
+	column status
+		dataType: string
+		lineageTag: f552838b-3b3f-44b3-8a1f-7df1821f011a
+		summarizeBy: none
+		sourceColumn: status
+
+	partition metric_definitions = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "\metric_definitions.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"metric_sort", Int64.Type}, {"metric", type text}, {"definition", type text}, {"source_columns", type text}, {"status", type text}}, "en-US")
+				in
+				    Typed
+

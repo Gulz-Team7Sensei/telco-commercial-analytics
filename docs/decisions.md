@@ -33,6 +33,7 @@
 | 2026-11-21 | Project moved to a short local path outside synced folders; `DataFolder` updated | The old path was long and personal; Power Query paths are machine-specific anyway |
 | 2026-11-21 | Semantic model rebuilt from `docs/model_spec.md` through the MCP; all anchors match again | The first build was never saved to the PBIP. The spec was complete enough to rebuild it exactly |
 | 2026-11-21 | Revenue at risk reconciled to a new Python reference (`revenue_at_risk.csv`); added `Revenue Lost vs Baseline` and `Migrations` | Page 2 needs the size of the loss and what restoration recovered; rule 3 |
+| 2026-11-23 | Added disconnected `metric_definitions` table (24 rows, from the metric dictionary) | Page 4 shows metric lineage and verification status inside the report |
 
 ## Known limitations
 

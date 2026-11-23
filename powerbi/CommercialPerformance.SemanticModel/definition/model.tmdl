@@ -33,6 +33,7 @@ ref table recon_summary
 ref table controls_log
 ref table plan_price_history
 ref table _Measures
+ref table metric_definitions
 
 ref cultureInfo en-US
 

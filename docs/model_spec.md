@@ -41,6 +41,7 @@ Apply it through the Power BI Modeling MCP against the file open in Power BI Des
 | `recon_summary` | 432 | month_start + region_id + plan_type | |
 | `controls_log` | 6 | | disconnected |
 | `plan_price_history` | 6 | | disconnected |
+| `metric_definitions` | 24 | metric | disconnected; all columns text except `metric_sort` (whole number, hidden); sort `metric` by `metric_sort` |
 
 Do not load `src_billing_control_totals`; `recon_summary` already carries it.
 
