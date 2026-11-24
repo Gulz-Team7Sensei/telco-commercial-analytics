@@ -4,5 +4,62 @@
   "displayName": "Revenue Bridge",
   "displayOption": "FitToPage",
   "height": 1080,
-  "width": 1920
+  "width": 1920,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "ThemeDataColor": {
+                    "ColorId": 0,
+                    "Percent": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "70e5c482147fc5e6e5fb",
+      "target": "ec3197d7ad0e27e2bf6a",
+      "type": "DataFilter"
+    },
+    {
+      "source": "725c597d25ac32b72cd8",
+      "target": "70e5c482147fc5e6e5fb",
+      "type": "DataFilter"
+    },
+    {
+      "source": "70e5c482147fc5e6e5fb",
+      "target": "725c597d25ac32b72cd8",
+      "type": "DataFilter"
+    },
+    {
+      "source": "5d245443f864e065e039",
+      "target": "c5e849192d8e8480e41a",
+      "type": "DataFilter"
+    },
+    {
+      "source": "d425a7cd0a21baf22594",
+      "target": "70e5c482147fc5e6e5fb",
+      "type": "NoFilter"
+    },
+    {
+      "source": "5d245443f864e065e039",
+      "target": "493334b81929ffc3f497",
+      "type": "DataFilter"
+    },
+    {
+      "source": "d425a7cd0a21baf22594",
+      "target": "5d245443f864e065e039",
+      "type": "NoFilter"
+    }
+  ]
 }

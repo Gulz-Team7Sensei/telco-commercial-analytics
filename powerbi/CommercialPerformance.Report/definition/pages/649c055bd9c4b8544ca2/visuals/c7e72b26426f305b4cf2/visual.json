@@ -1,0 +1,173 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "c7e72b26426f305b4cf2",
+  "position": {
+    "x": 109.06403940886699,
+    "y": 453.54679802955661,
+    "z": 4000,
+    "height": 383.05418719211821,
+    "width": 788.7192118226601,
+    "tabOrder": 4000
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_initiative_assignment"
+                    }
+                  },
+                  "Property": "risk_group"
+                }
+              },
+              "queryRef": "fact_initiative_assignment.risk_group",
+              "nativeQueryRef": "risk_group",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Churn Rate Test"
+                }
+              },
+              "queryRef": "_Measures.Churn Rate Test",
+              "nativeQueryRef": "Churn Rate Test"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Churn Rate Control"
+                }
+              },
+              "queryRef": "_Measures.Churn Rate Control",
+              "nativeQueryRef": "Churn Rate Control"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "valueAxis": [
+        {
+          "properties": {
+            "gridlineShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "e1c3fc0467f368efd167",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fact_initiative_assignment"
+              }
+            },
+            "Property": "risk_group"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "a5a852aa779a1f518073",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Churn Rate Test"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "0dc6ec460ac398783274",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Churn Rate Control"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

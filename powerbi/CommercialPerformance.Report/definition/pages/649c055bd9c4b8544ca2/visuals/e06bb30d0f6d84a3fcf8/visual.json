@@ -1,0 +1,76 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "e06bb30d0f6d84a3fcf8",
+  "position": {
+    "x": 13.276976013070168,
+    "y": 60.563655717008714,
+    "z": 11002,
+    "height": 45.025125628140707,
+    "width": 83.618090452261313,
+    "tabOrder": 11002
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": {
+                      "propertyIdentifier": {
+                        "objectName": "values",
+                        "propertyName": "expr"
+                      },
+                      "selector": {
+                        "id": "Control Sims"
+                      }
+                    },
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "18pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "expr": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Control SIMs"
+                },
+                "Annotations": {
+                  "NaturalLanguage": {
+                    "version": 1,
+                    "kind": "NaturalLanguage",
+                    "annotation": {
+                      "name": "Control Sims"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "Control Sims"
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "parentGroupName": "7a015efcb4966e44904f"
+}

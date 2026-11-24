@@ -1,0 +1,207 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "cc98b8a14bf96664070d",
+  "position": {
+    "x": 0,
+    "y": 710.027700831025,
+    "z": 3000,
+    "height": 332.409972299169,
+    "width": 1920,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "controls_log"
+                    }
+                  },
+                  "Property": "check_id"
+                }
+              },
+              "queryRef": "controls_log.check_id",
+              "nativeQueryRef": "check_id"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "controls_log"
+                    }
+                  },
+                  "Property": "description"
+                }
+              },
+              "queryRef": "controls_log.description",
+              "nativeQueryRef": "description"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "controls_log"
+                    }
+                  },
+                  "Property": "months_affected"
+                }
+              },
+              "queryRef": "controls_log.months_affected",
+              "nativeQueryRef": "months_affected"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "controls_log"
+                    }
+                  },
+                  "Property": "rows_affected"
+                }
+              },
+              "queryRef": "controls_log.rows_affected",
+              "nativeQueryRef": "rows_affected"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "controls_log"
+                    }
+                  },
+                  "Property": "net_revenue_impact"
+                }
+              },
+              "queryRef": "controls_log.net_revenue_impact",
+              "nativeQueryRef": "net_revenue_impact"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "controls_log"
+                    }
+                  },
+                  "Property": "action_taken"
+                }
+              },
+              "queryRef": "controls_log.action_taken",
+              "nativeQueryRef": "action_taken"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "controls_log"
+                    }
+                  },
+                  "Property": "status"
+                }
+              },
+              "queryRef": "controls_log.status",
+              "nativeQueryRef": "status"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "controls_log"
+                  }
+                },
+                "Property": "check_id"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "values": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "14D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 2,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "237.79899639415757D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "controls_log.months_affected"
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

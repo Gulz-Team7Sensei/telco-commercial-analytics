@@ -1,0 +1,44 @@
+{
+  "name": "Commercial pack",
+  "dataColors": [
+    "#1F3A5F",
+    "#2A9D8F",
+    "#8D99AE",
+    "#E9A23B",
+    "#6C5B7B",
+    "#4F86C6",
+    "#B56576",
+    "#5C6B73"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#252B33",
+  "tableAccent": "#1F3A5F",
+  "good": "#3A7D44",
+  "neutral": "#8D99AE",
+  "bad": "#C8553D",
+  "maximum": "#1F3A5F",
+  "center": "#8D99AE",
+  "minimum": "#DCE3EA",
+  "textClasses": {
+    "callout": {
+      "fontSize": 24,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#1F3A5F"
+    },
+    "title": {
+      "fontSize": 12,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#252B33"
+    },
+    "header": {
+      "fontSize": 10,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#252B33"
+    },
+    "label": {
+      "fontSize": 10,
+      "fontFace": "Segoe UI",
+      "color": "#4A5560"
+    }
+  }
+}

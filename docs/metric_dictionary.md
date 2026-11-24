@@ -30,7 +30,7 @@ Status key: `defined` → `python-verified` → `dax-reconciled`.
 | Payback months | Months until a cohort's cumulative direct margin covers its acquisition cost | derived | defined |
 | Revenue at risk | Baseline monthly net revenue of the affected district, where baseline is the average of the three months before the event (Dec 2025 to Feb 2026) | derived | dax-reconciled |
 | Revenue lost vs baseline | Sum over the selected months of net revenue minus the baseline. Negative means revenue lost | derived | dax-reconciled |
-| Budget variance | Actual − budget, flagged when the absolute variance exceeds the materiality threshold (to be set) | `fact_budget` | dax-reconciled |
+| Budget variance | Actual − budget, flagged when the absolute variance exceeds the materiality threshold (2% of budget) | `fact_budget` | dax-reconciled |
 
 ## DAX reconciliation (2026-11-21)
 

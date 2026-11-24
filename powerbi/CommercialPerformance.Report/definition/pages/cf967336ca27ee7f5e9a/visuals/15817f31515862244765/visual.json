@@ -1,0 +1,205 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "15817f31515862244765",
+  "position": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "height": 868.3417085427136,
+    "width": 1879.7989949748744,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "metric_definitions"
+                    }
+                  },
+                  "Property": "metric"
+                }
+              },
+              "queryRef": "metric_definitions.metric",
+              "nativeQueryRef": "metric"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "metric_definitions"
+                    }
+                  },
+                  "Property": "definition"
+                }
+              },
+              "queryRef": "metric_definitions.definition",
+              "nativeQueryRef": "definition"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "metric_definitions"
+                    }
+                  },
+                  "Property": "status"
+                }
+              },
+              "queryRef": "metric_definitions.status",
+              "nativeQueryRef": "status"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "total": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "14D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 2,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "20b4526e9447042e4a39",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "metric_definitions"
+              }
+            },
+            "Property": "metric"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "7faea2c4cf43403a4b9e",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "metric_definitions"
+              }
+            },
+            "Property": "definition"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "74961e7d9484be951f11",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "metric_definitions"
+              }
+            },
+            "Property": "status"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
+}

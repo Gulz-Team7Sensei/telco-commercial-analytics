@@ -1,0 +1,193 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "ea8e2d73edf9846e7c33",
+  "position": {
+    "x": 998.86699507389153,
+    "y": 453.54679802955661,
+    "z": 5000,
+    "height": 383.05418719211821,
+    "width": 779.40886699507382,
+    "tabOrder": 5000
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_initiative_assignment"
+                    }
+                  },
+                  "Property": "risk_group"
+                }
+              },
+              "queryRef": "fact_initiative_assignment.risk_group",
+              "nativeQueryRef": "risk_group",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Incremental Margin per SIM"
+                }
+              },
+              "queryRef": "_Measures.Incremental Margin per SIM",
+              "nativeQueryRef": "Incremental Margin per SIM"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "error": [
+        {
+          "properties": {
+            "enabled": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "_Measures.Incremental Margin per SIM"
+          }
+        },
+        {
+          "properties": {
+            "errorRange": {
+              "kind": "ErrorRange",
+              "explicit": {
+                "isRelative": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "false"
+                    }
+                  }
+                },
+                "lowerBound": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Measures"
+                        }
+                      },
+                      "Property": "Incremental Margin CI Low"
+                    }
+                  }
+                },
+                "upperBound": {
+                  "expr": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "_Measures"
+                        }
+                      },
+                      "Property": "Incremental Margin CI High"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 0
+                }
+              }
+            ],
+            "metadata": "_Measures.Incremental Margin per SIM",
+            "highlightMatching": 1
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "gridlineShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Incremental Margin per SIM- Only the high-risk group''s gain is clearly above zero'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "subTitle": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

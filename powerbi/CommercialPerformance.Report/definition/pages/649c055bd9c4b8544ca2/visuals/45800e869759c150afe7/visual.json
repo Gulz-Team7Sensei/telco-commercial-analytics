@@ -1,0 +1,76 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "45800e869759c150afe7",
+  "position": {
+    "x": 21.317177018095208,
+    "y": 60.563655717008714,
+    "z": 11003,
+    "height": 45.025125628140707,
+    "width": 83.618090452261313,
+    "tabOrder": 11003
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": {
+                      "propertyIdentifier": {
+                        "objectName": "values",
+                        "propertyName": "expr"
+                      },
+                      "selector": {
+                        "id": "Control Sims"
+                      }
+                    },
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "18pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "expr": {
+              "expr": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Test SIMs"
+                },
+                "Annotations": {
+                  "NaturalLanguage": {
+                    "version": 1,
+                    "kind": "NaturalLanguage",
+                    "annotation": {
+                      "name": "Control Sims"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "Control Sims"
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "parentGroupName": "1d0a836246766a3cad5a"
+}
